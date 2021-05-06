@@ -7,8 +7,8 @@ export XDG_CONFIG_HOME="\$HOME/.config/"
 export ZDOTDIR="\$XDG_CONFIG_HOME/zsh/"
 EOF'
 
-mkdir .config/zsh
-mkdir .config/nvim
+mkdir $HOME/.config/zsh
+mkdir $HOME/.config/nvim
 
 sudo chsh -s /bin/zsh devel
 
