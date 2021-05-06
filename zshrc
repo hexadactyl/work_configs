@@ -1,7 +1,5 @@
 [[ $- != *i* ]] && return # if not interactive exit
 
-export XDG_CONFIG_HOME="/home/devel/.config"
-
 autoload -U compinit
 compinit
 
@@ -29,7 +27,7 @@ unsetopt autocd beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/devel/.zshrc'
+zstyle :compinstall filename '$XDG_CONFIG_HOME/.zshrc'
 
 autoload -Uz compinit
 #zstyle ':completion:*' menu select
