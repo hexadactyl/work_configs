@@ -30,6 +30,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fireplace'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'edkolev/tmuxline.vim'
 call plug#end()
 
 " colorschemes
@@ -51,8 +52,19 @@ set updatetime=250
 " airline
 let g:airline_powerline_fonts = 1
 let g:airline_left_sep = "\uE0BC"
+let g:airline_left_alt_sep = "\uE0BD"
 let g:airline_right_sep = "\uE0BE"
+let g:airline_right_alt_sep = "\uE0BF"
 let g:airline#extensions#fzf#enabled = 1
+
+" tmuxline
+let g:tmuxline_powerline_separators = 1
+let g:tmuxline_separators = {
+    \ 'left' : '\uE0BC',
+    \ 'left_alt': '\uE0BD',
+    \ 'right' : '\uE0BE',
+    \ 'right_alt' : '\uE0BF',
+    \ 'space' : ' '}
 
 " fzf
 let g:fzf_layout = { 'down': '40%' }
