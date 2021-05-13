@@ -1,7 +1,5 @@
 [[ $- != *i* ]] && return # if not interactive exit
 
-export XDG_CONFIG_HOME="/home/devel/.config"
-
 autoload -U compinit
 compinit
 
@@ -29,7 +27,7 @@ unsetopt autocd beep
 bindkey -e
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/devel/.zshrc'
+zstyle :compinstall filename '$XDG_CONFIG_HOME/.zshrc'
 
 autoload -Uz compinit
 #zstyle ':completion:*' menu select
@@ -60,7 +58,7 @@ source $XDG_CONFIG_HOME/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 if [ ! -f /usr/local/share/zsh/site-functions/prompt_spaceship_setup ]; then
 	git clone https://github.com/denysdovhan/spaceship-prompt.git --depth=1 $XDG_CONFIG_HOME/zsh/plugins/spaceship-prompt
 	sudo mkdir -p /usr/local/share/zsh/site-functions/
-	sudo chown -R devel:devel /usr/local/share/zsh/site-functions/
+	sudo chown -R $USER:$USEr /usr/local/share/zsh/site-functions/
 	ln -sf $XDG_CONFIG_HOME/zsh/plugins/spaceship-prompt/spaceship.zsh /usr/local/share/zsh/site-functions/prompt_spaceship_setup
 fi
 

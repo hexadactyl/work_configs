@@ -3,12 +3,12 @@ gsettings set org.gnome.desktop.wm.preferences button-layout ":minimize,maximize
 #gsettings set org.gnome.desktop.background show-desktop-icons true
 
 sudo zsh -c 'cat << EOF > /etc/zshenv
-export XDG_CONFIG_HOME="\$HOME/.config/"
-export ZDOTDIR="\$XDG_CONFIG_HOME/zsh/"
+export XDG_CONFIG_HOME="\$HOME/.config"
+export ZDOTDIR="\$XDG_CONFIG_HOME/zsh"
 EOF'
 
-mkdir .config/zsh
-mkdir .config/nvim
+mkdir $HOME/.config/zsh
+mkdir $HOME/.config/nvim
 
 sudo chsh -s /bin/zsh devel
 
