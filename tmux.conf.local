@@ -423,6 +423,13 @@ setw -g pane-base-index 1
 bind n split-window -h # horizontal split
 bind m split-window -v # vertical split
 
+# fix airline problem
+set -g default-terminal "xterm"
+set -g default-terminal "screen-256color"
+ 
+# source tmuxline
+source $XDG_CONFIG_HOME/tmux/tmuxline
+
 # from vim-tmux
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
