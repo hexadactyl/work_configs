@@ -12,14 +12,14 @@ mkdir $HOME/.config/nvim
 
 sudo chsh -s /bin/zsh devel
 
-sudo yum install gnome-tweaks -y
-sudo yum install neovim -y
-sudo yum install zsh -y
-sudo yum install fira-code-fonts -y
-sudo yum install zsh-syntax-highlighting -y
+sudo yum install -y gnome-tweaks
+sudo yum install -y neovim
+sudo yum install -y zsh
+sudo yum install -y zsh-syntax-highlighting
+sudo yum install -y kitty
 
 brew install fzf
 $(brew --prefix)/opt/fzf/install
 source ~/.config/zsh/.zshrc
 
-echo "Remember to change the font to fira code!"
+echo "Remember to change the font to mononoki"

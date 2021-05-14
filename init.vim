@@ -31,6 +31,9 @@ Plug 'tpope/vim-fireplace'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'edkolev/tmuxline.vim'
+Plug 'liuchengxu/vim-which-key'
+" On-demand lazy load
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 call plug#end()
 
 " colorschemes
@@ -60,10 +63,10 @@ let g:airline#extensions#fzf#enabled = 1
 " tmuxline
 let g:tmuxline_powerline_separators = 1
 let g:tmuxline_separators = {
-    \ 'left' : '\uE0BC',
-    \ 'left_alt': '\uE0BD',
-    \ 'right' : '\uE0BE',
-    \ 'right_alt' : '\uE0BF',
+    \ 'left' : ' ',
+    \ 'left_alt': ' ',
+    \ 'right' : ' ',
+    \ 'right_alt' : ' ',
     \ 'space' : ' '}
 
 " fzf
@@ -71,3 +74,6 @@ let g:fzf_layout = { 'down': '40%' }
 
 " salve
 let g:salve_auto_start_repl = 1
+
+" key mappings
+nmap <silent> <C-O> :Files
