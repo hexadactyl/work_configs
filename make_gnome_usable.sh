@@ -17,6 +17,10 @@ sudo yum install -y neovim
 sudo yum install -y zsh
 sudo yum install -y zsh-syntax-highlighting
 sudo yum install -y kitty
+cp /home/linuxbrew/.linuxbrew/var/homebrew/linked/fzf/shell/key-bindings.zsh $HOME/.config/zsh/
+
+sudo yum-config-manager --add-repo=https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+sudo yum install ripgrep -y
 
 brew install fzf
 $(brew --prefix)/opt/fzf/install
