@@ -18,6 +18,7 @@ setopt NO_BEEP
 autoload -U colors && colors
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source $XDG_CONFIG_HOME/zsh/key-bindings.zsh
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.config/zsh/.histfile
 HISTSIZE=1000
