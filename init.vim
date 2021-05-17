@@ -61,10 +61,10 @@ let g:airline#extensions#fzf#enabled = 1
 " tmuxline
 let g:tmuxline_powerline_separators = 1
 let g:tmuxline_separators = {
-    \ 'left' : ' ',
-    \ 'left_alt': ' ',
-    \ 'right' : ' ',
-    \ 'right_alt' : ' ',
+    \ 'left' : '\uE0BC',
+    \ 'left_alt': '\uE0BD',
+    \ 'right' : '\uE0BE',
+    \ 'right_alt' : '\uE0BF',
     \ 'space' : ' '}
 
 " fzf
