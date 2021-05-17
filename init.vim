@@ -9,8 +9,7 @@ set showcmd
 
 " allow netrw plugins
 set nocp                    " 'compatible' is not set
-filetype plugin on          " plugins are enabled
-
+filetype plugin on          " plugins are enabled 
 " PLUGIN MANAGEMENT
 " auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))                              
@@ -40,6 +39,7 @@ Plug 'liuchengxu/vim-which-key'
 " On-demand lazy load
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 Plug 'ryanoasis/vim-devicons'
+Plug 'unblevable/quick-scope'
 call plug#end()
 
 " colorschemes
@@ -97,6 +97,14 @@ nmap <silent> <C-G> :Rg<CR>
 nmap <silent> _ :Vexplore<CR>
 autocmd FileType netrw nmap <buffer> h -
 autocmd FileType netrw nmap <buffer> l <CR>
+
+" quick scope
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"highlight QuickScopePrimary guifg='#afff5f' gui=underline
+"highlight QuickScopeSecondary guifg='#5fffff' gui=underline
+"highlight QuickScopePrimary gui=underline ctermfg=155 cterm=underline
+"highlight QuickScopeSecondary gui=underline ctermfg=81 cterm=underline
+
 " FIXME
 "autocmd FileType netrw nmap <silent> <C-H> :wincmd h<CR>
 "autocmd FileType netrw nmap <silent> <C-J> :wincmd j<CR>
