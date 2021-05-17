@@ -4,6 +4,12 @@ set number relativenumber
 set nowrap
 set termguicolors
 set cursorline
+let mapleader=' '
+set showcmd
+
+" allow netrw plugins
+set nocp                    " 'compatible' is not set
+filetype plugin on          " plugins are enabled
 
 " PLUGIN MANAGEMENT
 " auto-install vim-plug
@@ -26,12 +32,14 @@ Plug 'tpope/vim-salve'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-vinegar'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'liuchengxu/vim-which-key'
 " On-demand lazy load
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " colorschemes
@@ -73,11 +81,24 @@ let g:fzf_layout = { 'down': '40%' }
 " salve
 let g:salve_auto_start_repl = 1
 
+" which-key
+"nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+
 " KEY BINDING CONFIG
-" remap split commands
+" split commands
 nmap <silent> <C-V> :wincmd v<CR>
 nmap <silent> <C-S> :wincmd s<CR>
 
-" fzf keys
+" fzf commands
 nmap <silent> <C-O> :Files<CR>
 nmap <silent> <C-G> :Rg<CR>
+
+" netrw commands
+nmap <silent> _ :Vexplore<CR>
+autocmd FileType netrw nmap <buffer> h -
+autocmd FileType netrw nmap <buffer> l <CR>
+" FIXME
+"autocmd FileType netrw nmap <silent> <C-H> :wincmd h<CR>
+"autocmd FileType netrw nmap <silent> <C-J> :wincmd j<CR>
+"autocmd FileType netrw nmap <silent> <C-K> :wincmd k<CR>
+"autocmd FileType netrw nmap <silent> <C-l> :wincmd l<CR>
