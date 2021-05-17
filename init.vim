@@ -1,13 +1,11 @@
-" vim config
+" Matt's nvim config
+" UI CONFIG
 set number relativenumber
 set nowrap
 set termguicolors
 set cursorline
 
-" remap split commands
-nmap <silent> <C-V> :wincmd v<CR>
-nmap <silent> <C-S> :wincmd s<CR>
-
+" PLUGIN MANAGEMENT
 " auto-install vim-plug
 if empty(glob('~/.config/nvim/autoload/plug.vim'))                              
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim 
@@ -40,13 +38,13 @@ call plug#end()
 " tender
 "colorscheme tender
 
+" plugin config
 " gruvbox
 colorscheme gruvbox
 let g:gruvbox_contrast_dark = 'hard'
 let g:gruvbox_italic = 1
 let g:gruvbox_number_column = 'bg0'
 
-" plugin config
 " gitgutter
 let g:gitgutter_realtime = 1
 let g:gitgutter_eager = 1
@@ -75,5 +73,11 @@ let g:fzf_layout = { 'down': '40%' }
 " salve
 let g:salve_auto_start_repl = 1
 
-" key mappings
-nmap <silent> <C-O> :Files
+" KEY BINDING CONFIG
+" remap split commands
+nmap <silent> <C-V> :wincmd v<CR>
+nmap <silent> <C-S> :wincmd s<CR>
+
+" fzf keys
+nmap <silent> <C-O> :Files<CR>
+nmap <silent> <C-G> :Rg<CR>
