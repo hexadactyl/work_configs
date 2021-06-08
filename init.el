@@ -1,24 +1,3 @@
-;; turn off bad defaults
-(setq inhibit-startup-message t)
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(tooltip-mode -1)
-(menu-bar-mode -1)
-(setq visible-bell t)
-
-;; HOW THE FUCK DOES THE GOD DAMN CLIPBOARD WORK
-;(setq x-select-enable-clipboard t)
-
-;; make escape work like it should
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; set tab width
-(setq-default tab-width 2)
-(setq-default evil-shift-width tab-width)
-
-;; use spaces for indentation
-(setq-default indent-tabs-mode nil)
-
 ;; initialize package sources
 (require 'package)
 
@@ -38,17 +17,34 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; turn off bad defaults
+(setq inhibit-startup-message t)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(menu-bar-mode -1)
+(setq visible-bell t)
+
+;; HOW THE FUCK DOES THE GOD DAMN CLIPBOARD WORK
+;(setq x-select-enable-clipboard t)
+
+;; make escape work like it should
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; display line numbers
 (column-number-mode)
 (global-display-line-numbers-mode 1)
-(dolist (mode '(org-mode-hook
-		term-mode-hook
-		eshell-mode-hook))
+
+;; disable line numbers in some contexts
+(dolist (mode
+   '(org-mode-hook
+    term-mode-hook
+    eshell-mode-hook
+    pdf-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; diminish allows hiding modes in the modeline
 (use-package diminish)
-
-(use-package org)
 
 (use-package telephone-line
   :init (telephone-line-mode)
@@ -57,6 +53,27 @@
   (telephone-line-secondary-left-separator 'telephone-line-identity-hollow-left)
   (telephone-line-primary-right-separator 'telephone-line-identity-right)
   (telephone-line-secondary-right-separator 'telephone-line-identity-hollow-right))
+
+(use-package doom-themes
+  :init (load-theme 'doom-gruvbox t))
+
+(use-package all-the-icons)
+
+;; set tab width
+(setq-default tab-width 2)
+(setq-default evil-shift-width tab-width)
+
+;; use spaces for indentation
+(setq-default indent-tabs-mode nil)
+
+(use-package pdf-tools
+  ;:config (pdf-tools-install)
+)
+
+(add-hook 'pdf-view-mode-hook (lambda () (linum-mode -1)))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package ivy
   :init (ivy-mode)
@@ -87,81 +104,13 @@
   :defer t
   :after hydra)
 
-(use-package hydra
-  :defer 1)
-
-(defhydra hydra/cycle-buffers (:timeout 15)
-  "cycle buffers"
-  ("j" next-buffer)
-  ("k" previous-buffer)
-  ("x" kill-this-buffer)
-  ("c" kill-buffer-and-window)
-  ("SPC" nil "quit" :exit t))
-
-(defhydra hydra/resize-window (:timeout 15)
-  "resize window"
-  ("=" evil-window-increase-height)
-  ("-" evil-window-decrease-height)
-  ("." evil-window-increase-width)
-  ("," evil-window-decrease-width)
-  ("SPC" nil "quit" :exit t))
-
-(defhydra hydra/text-zoom (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("SPC" nil "quit" :exit t))
-
-(use-package doom-themes
-  :init (load-theme 'doom-gruvbox t))
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  ;:config
-  ;(setq which-key-idle-delay 0.3))
-  )
-
-(use-package general
-  :config
-  (general-create-definer matt/leader-keys
-			  :keymaps '(normal insert visual emacs)
-			  :prefix "SPC"
-			  :global-prefix "C-SPC")
-  (matt/leader-keys
-    "b"   '(:ignore t :which-key "buffers")
-    "bb"  '(hydra/cycle-buffers/body :which-key "cycle buffers")
-    "bk"  'kill-buffer-and-window
-
-    "w"   '(:ignore t :which-key "windows")
-    "wr"  '(hydra/resize-window/body :which-key "resize window")
-
-    "z"   '(hydra/text-zoom/body :which-key "zoom text")
-
-    "g"   '(:ignore t :which-key "git")
-    "gs"  'magit-status
-    "gd"  'magit-diff-unstaged
-    "gc"  'magit-branch-or-checkout
-    "gl"  '(:ignore t :which-key "log")
-    "glc" 'magit-log-current
-    "glf" 'magit-log-buffer-file
-    "gb"  'magit-branch
-    "gP"  'magit-push-current
-    "gp"  'magit-pull-branch
-    "gf"  'magit-fetch
-    "gF"  'magit-fetch-all
-    "gr"  'magit-rebase))
-
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         ("C-x z" . counsel-fzf)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)))
+          ("C-x b" . counsel-ibuffer)
+          ("C-x C-f" . counsel-find-file)
+          ("C-x z" . counsel-fzf)
+          :map minibuffer-local-map
+          ("C-r" . 'counsel-minibuffer-history)))
 
 (use-package helpful
   :custom
@@ -172,6 +121,8 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+
+(use-package ripgrep)
 
 (use-package evil
   :init
@@ -196,6 +147,133 @@
   :config
   (evil-collection-init))
 
+(use-package general
+  :config
+  (general-create-definer matt/leader-keys
+        :keymaps '(normal insert visual emacs)
+        :prefix "SPC"
+        :global-prefix "C-SPC")
+  (matt/leader-keys
+    "b"   '(:ignore t :which-key "buffers")
+    "bb"  '(hydra/cycle-buffers/body :which-key "cycle buffers")
+    "bc"  'kill-buffer-and-window
+    "bk"  'kill-buffer
+    "br"  'revert-buffer-noauto
+    "bs"  'counsel-ibuffer
+    "bx"  'kill-this-buffer
+
+    "d"   '(:ignore t :which-key "dired")
+    "dc"  'dired-config
+    "dd"  'dired
+    ;"dh"  open home dir
+    "dh"  (lambda nil (interactive)
+            (dired (getenv "HOME")))
+    "dj"  'dired-jump
+    "do"  'dired-jump-other-window
+    "dp"  'dired-projects
+
+    "f"   '(:ignore t :which-key "find")
+    "fc"  '(counsel-fzf-config-files :which-key "fzf config dir")
+    "ff"  'find-file
+    "fg"  '(counsel-rg :which-key "grep")
+    "fz"  'counsel-fzf
+
+    "g"   '(:ignore t :which-key "git")
+    "gs"  'magit-status
+    "gd"  'magit-diff-unstaged
+    "gc"  '(:ignore t :which-key "checkout")
+    "gcf"  'magit-file-checkout
+    "gcb"  'magit-branch-or-checkout
+    "gl"  '(:ignore t :which-key "log")
+    "glc" 'magit-log-current
+    "glf" 'magit-log-buffer-file
+    "gb"  'magit-branch
+    "gP"  'magit-push-current
+    "gp"  'magit-pull-branch
+    "gf"  'magit-fetch
+    "gF"  'magit-fetch-all
+    "gr"  'magit-rebase
+
+    "o"   '(:ignore t :which-key "open")
+    "oc"  '(open-org-config :which-key "open emacs config")
+
+    ;"p"   '(:keymap projectile-command-map :package projectile)
+    ;"p"   'projectile-command-map TODO: fix this
+
+
+    "w"   '(:ignore t :which-key "windows")
+    "wc"  'evil-window-delete
+    "wh"  'evil-window-left
+    "wj"  'evil-window-down
+    "wk"  'evil-window-up
+    "wl"  'evil-window-right
+    "wr"  '(hydra/resize-window/body :which-key "resize window")
+    "ws"  'evil-window-split
+    "wv"  'evil-window-vsplit
+
+    "z"   '(hydra/text-zoom/body :which-key "zoom text")
+    ";"   '(eval-config :which-key "eval config")))
+
+; helper functions
+; TODO: decide if I should use lambdas or helper functions
+(defun counsel-fzf-config-files ()
+  (interactive)
+  (counsel-fzf nil (getenv "XDG_CONFIG_HOME")))
+
+(defun open-org-config ()
+  (interactive)
+  (find-file (concat (getenv "HOME") "/.emacs.d/emacs.org"))) ;TODO: abstract this to use HOME
+
+(defun revert-buffer-noauto ()
+  (interactive)
+  (revert-buffer nil t t)) ;TODO: figure out args
+
+(defun dired-home ()
+  (interactive)
+  (dired (getenv "HOME")))
+
+(defun dired-config ()
+  (interactive)
+  (dired (getenv "XDG_CONFIG_HOME")))
+
+(defun dired-projects ()
+  (interactive)
+  (dired "/home/matt/projects"))
+
+(defun eval-config nil (interactive)
+  (load-file (getenv "HOME") "/.emacs.d/init.el"))
+
+(use-package hydra
+  :defer 1)
+
+(defhydra hydra/cycle-buffers ()
+  "cycle buffers"
+  ("j" next-buffer)
+  ("k" previous-buffer)
+  ("x" kill-this-buffer)
+  ("c" kill-buffer-and-window)
+  ("SPC" nil "quit" :exit t))
+
+(defhydra hydra/resize-window (:timeout 15)
+  "resize window"
+  ("=" evil-window-increase-height)
+  ("-" evil-window-decrease-height)
+  ("." evil-window-increase-width)
+  ("," evil-window-decrease-width)
+  ("SPC" nil "quit" :exit t))
+
+(defhydra hydra/text-zoom (:timeout 10)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("SPC" nil "quit" :exit t))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
+
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -210,18 +288,46 @@
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 ;(use-package evil-magit
-;  :after magit)
+  ;:after magit)
 
-(with-eval-after-load 'dired
-  (evil-define-key 'normal dired-mode-map (kbd "h") 'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map (kbd "l") 'dired-find-file) ; use dired-find-file instead if not using dired-open package
-  (evil-define-key 'normal peep-dired-mode-map (kbd "j") 'peep-dired-next-file)
-  (evil-define-key 'normal peep-dired-mode-map (kbd "k") 'peep-dired-prev-file))
-  
+(use-package all-the-icons-dired)
+
+(use-package dired-single
+  :defer t)
+
+(use-package dired-ranger
+  :defer t)
+
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-listing-switches "-ahgo --group-directories-first"))
+
+(add-hook 'dired-mode-hook
+        (lambda ()
+          (all-the-icons-dired-mode 1)))
+
+(evil-collection-define-key 'normal 'dired-mode-map
+  "h" 'dired-single-up-directory
+  "l" 'dired-single-buffer
+  "y" 'dired-ranger-copy
+  "X" 'dired-ranger-move
+  "p" 'dired-ranger-paste
+  ;"j" 'peep-dired-next-file
+  ;"k" 'peep-dired-prev-file
+)
+
 (use-package slime)
 (setq inferior-lisp-program "clisp")
 
+;(use-package scheme-mode
+  ;:ensure nil)
+
 (use-package racket-mode)
+
+;(use-package geiser
+  ;:config
+  ;(setq geiser-default-implementation 'racket))
 
 (use-package clojure-mode
   :ensure t
@@ -231,14 +337,11 @@
 
 (use-package python-mode
   :ensure t
-  :hook (python-mode . lsp-deferred) 
+  ;:hook (python-mode . lsp-deferred) 
   :custom (python-shell-interpreter "python3"))
 
+; needed for org-babel
 (require 'ob-js)
-
-(defun matt/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-ssegments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -247,6 +350,10 @@
   (setq lsp-keymap-prefix "C-c l")
   :config
   (lsp-enable-which-key-integration t))
+
+(defun matt/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-ssegments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
 
 (use-package company
   :after lsp-mode
@@ -301,7 +408,8 @@
 (use-package org
   :hook (org-mode . efs/org-mode-setup)
   :config
-  (setq org-ellipsis " ▾")
+  (setq org-ellipsis " ▾"
+        org-hide-emphasis-markers t)
   (efs/org-font-setup))
 
 (use-package org-bullets
@@ -322,7 +430,7 @@
   'org-babel-load-languages
   '((emacs-lisp . t)
     (lisp . t)
-    ;(scheme . t)
+    (scheme . t)
     (python . t)
     (js . t)
     ))
@@ -334,23 +442,6 @@
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("cl" . "src lisp"))
+  (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
   (add-to-list 'org-structure-template-alist '("js" . "src js"))
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("a41d7d4c20bfa90be5450905a69f65a8ae35d3bcb97f11dfaef47036cf72a372" default))
- '(helm-minibuffer-history-key "M-p")
- '(package-selected-packages
-   '(lsp-ui company-box company python-mode lsp-mode telephone-line ivy-rich which-key use-package rainbow-delimiters ivy)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
