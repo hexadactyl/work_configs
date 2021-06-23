@@ -66,24 +66,19 @@
 ;; use spaces for indentation
 (setq-default indent-tabs-mode nil)
 
-(use-package pdf-tools
-  ;:config (pdf-tools-install)
-)
-
-(add-hook 'pdf-view-mode-hook (lambda () (linum-mode -1)))
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package ivy
-  :init (ivy-mode)
-  :diminish ivy-mode
+    :init (ivy-mode)
+    :diminish ivy-mode
   :bind (("C-s" . swiper)
          :map ivy-minibuffer-map
          ("TAB" . ivy-alt-done)	
          ("C-l" . ivy-alt-done)
          ("C-j" . ivy-next-line)
          ("C-k" . ivy-previous-line)
+         ("RET" . ivy-immediate-done)
          :map ivy-switch-buffer-map
          ("C-k" . ivy-previous-line)
          ("C-l" . ivy-done)
@@ -93,8 +88,12 @@
          ("C-d" . ivy-reverse-i-search-kill)))
 
 ; enable fuzzy finding EVERYWHERE
-(setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
+;(setq ivy-re-builders-alist
+      ;'((t . ivy--regex-fuzzy)))
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
 
 (use-package ivy-rich
   :init
@@ -123,6 +122,14 @@
   ([remap describe-key] . helpful-key))
 
 (use-package ripgrep)
+
+(use-package helm)
+  ;(use-package helm-config)
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  (global-unset-key (kbd "C-x c"))
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (use-package evil
   :init
@@ -165,9 +172,9 @@
     "d"   '(:ignore t :which-key "dired")
     "dc"  'dired-config
     "dd"  'dired
-    ;"dh"  open home dir
-    "dh"  (lambda nil (interactive)
-            (dired (getenv "HOME")))
+    "dh"  'dired-home
+    ;"dh"  (lambda nil (interactive)
+    ;        (dired (getenv "HOME")))
     "dj"  'dired-jump
     "do"  'dired-jump-other-window
     "dp"  'dired-projects
@@ -210,19 +217,21 @@
     "wr"  '(hydra/resize-window/body :which-key "resize window")
     "ws"  'evil-window-split
     "wv"  'evil-window-vsplit
+    "ww"  (lambda nil (interactive)
+            (evil-window-set-height 30))
 
     "z"   '(hydra/text-zoom/body :which-key "zoom text")
     ";"   '(eval-config :which-key "eval config")))
 
 ; helper functions
-; TODO: decide if I should use lambdas or helper functions
+                                        ; TODO: decide if I should use lambdas or helper functions
 (defun counsel-fzf-config-files ()
   (interactive)
   (counsel-fzf nil (getenv "XDG_CONFIG_HOME")))
 
 (defun open-org-config ()
   (interactive)
-  (find-file (concat (getenv "HOME") "/.emacs.d/emacs.org"))) ;TODO: abstract this to use HOME
+  (find-file (concat (getenv "XDG_CONFIG_HOME") "/emacs/emacs.org")))
 
 (defun revert-buffer-noauto ()
   (interactive)
@@ -319,6 +328,9 @@
 
 (use-package slime)
 (setq inferior-lisp-program "clisp")
+(use-package lispy)
+(use-package evil-lispy)
+(electric-pair-mode)
 
 ;(use-package scheme-mode
   ;:ensure nil)
@@ -333,7 +345,9 @@
   :ensure t
   :hook (clojure-mode . lsp-deferred))
 (use-package queue)
-(use-package cider)
+(use-package cider
+  :bind (("c-c j" . cider-jack-in-clj)
+         ("C-c C-j" . cider-jack-in-clj)))
 
 (use-package python-mode
   :ensure t
@@ -433,6 +447,7 @@
     (scheme . t)
     (python . t)
     (js . t)
+    (clojure . t)
     ))
 
 (with-eval-after-load 'org
@@ -444,4 +459,5 @@
   (add-to-list 'org-structure-template-alist '("cl" . "src lisp"))
   (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
   (add-to-list 'org-structure-template-alist '("js" . "src js"))
+  (add-to-list 'org-structure-template-alist '("clj" . "src clojure"))
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
